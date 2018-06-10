@@ -9,4 +9,4 @@ setup(name='fraction-chart',
       license="MIT",
       zip_safe=False,
       platforms='any',
-      url='http://github.com/henriquebastos/python-decouple/',)
+      url='https://github.com/pythonguru101/fraction-chart/',)
