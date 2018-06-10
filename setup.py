@@ -9,4 +9,6 @@ setup(name='fraction-chart',
       license="MIT",
       zip_safe=False,
       platforms='any',
+      py_modules=['fraction_chart'],
+      include_package_data=True,
       url='https://github.com/pythonguru101/fraction-chart/',)
