@@ -1,5 +1,4 @@
 import requests
-from PIL import Image
 import io
 import os
 import json
@@ -30,14 +29,13 @@ def push(token, plot, name, code_snippet=None, comment=None, data_set=None, path
             raise ValueError('"data_set" should be valid JSON string.')
 
     # save to in-memory file
-    buf = io.BytesIO()
+    buf = io.StringIO()
     plot.savefig(buf, format='svg')
-    buf.seek(0)
 
     if path_to_csv and os.path.exists(path_to_csv):
-        files = {'chart': Image.open(buf), 'csv_file': open(path_to_csv, 'r')}
+        files = {'chart': buf.getvalue(), 'csv_file': open(path_to_csv, 'r')}
     else:
-        files = {'chart': Image.open(buf)}
+        files = {'chart': buf.getvalue()}
 
     buf.close()
 

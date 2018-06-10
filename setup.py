@@ -13,7 +13,6 @@ setuptools.setup(
       py_modules=['fraction_chart'],
       include_package_data=True,
       install_requires=[
-            'pillow',
             'requests',
       ],
       url='https://github.com/pythonguru101/fraction-chart/',
