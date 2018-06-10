@@ -39,6 +39,8 @@ def push(token, plot, name, code_snippet=None, comment=None, data_set=None, path
     else:
         files = {'chart': Image.open(buf)}
 
+    buf.close()
+
     headers = {
         'Authorization': "Token %s" % token,
         'Cache-Control': "no-cache"
