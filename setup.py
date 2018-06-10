@@ -1,8 +1,9 @@
 # coding: utf-8
-from setuptools import setup
+import setuptools
 
 
-setup(name='fraction-chart',
+setuptools.setup(
+      name='fraction-chart',
       version='0.1',
       description='Push plot chart to fraction site',
       author="Fraction", author_email="pythonguru101@gmail.com",
@@ -11,4 +12,9 @@ setup(name='fraction-chart',
       platforms='any',
       py_modules=['fraction_chart'],
       include_package_data=True,
-      url='https://github.com/pythonguru101/fraction-chart/',)
+      install_requires=[
+            'pillow',
+            'requests',
+      ],
+      url='https://github.com/pythonguru101/fraction-chart/',
+)
