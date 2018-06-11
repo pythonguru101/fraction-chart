@@ -25,7 +25,7 @@ def push(token, plot, name, code_snippet=None, comment=None, data_set=None, path
     if data_set:
         try:
             json_obj = json.loads(data_set)
-        except ValueError:
+        except Exception:
             raise ValueError('"data_set" should be valid JSON string.')
 
     # save to in-memory file
