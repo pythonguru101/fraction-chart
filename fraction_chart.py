@@ -26,18 +26,25 @@ def push(token, plot, name, code_snippet=None, comment=None, data_set=None, path
         try:
             json_obj = json.loads(data_set)
         except Exception:
-            raise ValueError('"data_set" should be valid JSON string.')
+            raise ValueError('Parameter:"data_set" should be valid JSON string.')
 
     # save to in-memory file
     buf = io.StringIO()
-    plot.savefig(buf, format='svg')
+    try:
+        plot.savefig(buf, format='svg')
 
-    if path_to_csv and os.path.exists(path_to_csv):
-        files = {'chart': buf.getvalue(), 'csv_file': open(path_to_csv, 'r')}
-    else:
-        files = {'chart': buf.getvalue()}
+        if path_to_csv and os.path.exists(path_to_csv):
+            files = {'chart': buf.getvalue(), 'csv_file': open(path_to_csv, 'r')}
+        else:
+            files = {'chart': buf.getvalue()}
+    except AttributeError:
+        raise ValueError('Parameter:"plot" should be pyplot object')
 
-    buf.close()
+    except Exception as e:
+        raise Exception(e)
+
+    finally:
+        buf.close()
 
     headers = {
         'Authorization': "Token %s" % token,
