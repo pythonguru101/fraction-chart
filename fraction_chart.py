@@ -7,7 +7,7 @@ import json
 POST_URL = 'http://fraction.im/api/v1/microblog/'
 
 
-def push(token, plot, name, code_snippet=None, comment=None, data_set=None, path_to_csv=None):
+def push(token, plot, name, code_snippet, comment=None, data_set=None, path_to_csv=None):
     """
     Pushes a plot to the website via a POST request
 
@@ -15,13 +15,16 @@ def push(token, plot, name, code_snippet=None, comment=None, data_set=None, path
         token (str): Token for user authentication.
         plot (pyplot): Matplotlib pyplot object
         name (str): Name to display along with the chart
-        code_snippet (str): Optional code snippet used to generate plot
+        code_snippet (str): Code snippet used to generate plot
         comment (str): A brief description or comment to post with chart
         data_set (JSON str): Keys are column names and Values are numpy arrays
         path_to_csv (str): Path to a CSV data file
     :rtype: requests.Response
     """
     # validation
+    if code_snippet is None:
+        raise ValueError('Parameter:"code_snippet" should not be empty.')
+
     if data_set:
         try:
             json_obj = json.loads(data_set)
