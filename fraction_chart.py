@@ -13,7 +13,7 @@ def push(token, plot, name, code_snippet, comment=None, data_set=None, path_to_c
 
     Args:
         token (str): Token for user authentication.
-        plot (pyplot): Matplotlib pyplot object
+        plot (fig): Matplotlib figure object
         name (str): Name to display along with the chart
         code_snippet (str): Code snippet used to generate plot
         comment (str): A brief description or comment to post with chart
@@ -41,7 +41,7 @@ def push(token, plot, name, code_snippet, comment=None, data_set=None, path_to_c
         else:
             files = {'chart': buf.getvalue()}
     except AttributeError:
-        raise ValueError('Parameter:"plot" should be pyplot object')
+        raise ValueError('Parameter:"plot" should be figure object')
 
     except Exception as e:
         raise Exception(e)
