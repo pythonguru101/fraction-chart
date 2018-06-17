@@ -59,14 +59,14 @@ def push(token, plot, title, code_snippet, comment=None, data_set=None, path_to_
         raise ValueError(
             """
             The plot you passed is not valid. It should be valid Matplotlib figure object, which can generate a chart.
-            
+
             For example:
                 import matplotlib.pyplot as plt
                 plt.figure()
                 plt.plot([1, 2])
                 plt.title("test")                
-                
-            
+
+
             As you can see the example above, you can pass the 'plt' object to our param:'plot'.
             """
         )
@@ -76,34 +76,32 @@ def push(token, plot, title, code_snippet, comment=None, data_set=None, path_to_
     finally:
         buf.close()
 
-    try:
+    headers = {
+        'Authorization': "Token %s" % token,
+        'Cache-Control': "no-cache"
+    }
 
-        headers = {
-            'Authorization': "Token %s" % token,
-            'Cache-Control': "no-cache"
-        }
+    data = {
+        "name": title,
+        "code_snippet": code_snippet,
+        "comment": comment,
+        "data_set": data_set
+    }
 
-        data = {
-            "name": title,
-            "code_snippet": code_snippet,
-            "comment": comment,
-            "data_set": data_set
-        }
+    r = requests.post(POST_URL, files=files, data=data, headers=headers)
 
-        r = requests.post(POST_URL, files=files, data=data, headers=headers)
+    if r.status_code == 500:
+        raise FractionChartError({'status_code': 500, 'errors': 'API server error'})
 
-        if r.status_code >= 400:
-            # in case of a 500 error,  the response might not be a json
-            try:
-                error_data = r.json()
-            except ValueError:
-                error_data = {'response': r}
-            raise FractionChartError(error_data)
+    elif r.status_code >= 400:
+        # in case of a 500 error,  the response might not be a json
+        try:
+            error_data = r.json()
+        except ValueError:
+            error_data = {'detail': r}
+        raise FractionChartError({'status_code': r.status_code, 'errors': error_data})
 
-        if r.status_code == 204:
-            return None
+    if r.status_code == 204:
+        return None
 
-        return r.json()
-
-    except Exception as e:
-        raise Exception(e)
+    return r.json()
