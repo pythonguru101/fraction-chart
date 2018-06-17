@@ -7,14 +7,14 @@ import json
 POST_URL = 'http://fraction.im/api/v1/microblog/'
 
 
-def push(token, plot, name, code_snippet, comment=None, data_set=None, path_to_csv=None):
+def push(token, plot, title, code_snippet, comment=None, data_set=None, path_to_csv=None):
     """
     Pushes a plot to the website via a POST request
 
     Args:
         token (str): Token for user authentication.
         plot (fig): Matplotlib figure object
-        name (str): Name to display along with the chart
+        title (str): Title to display along with the chart
         code_snippet (str): Code snippet used to generate plot
         comment (str): A brief description or comment to post with chart
         data_set (JSON str): Keys are column names and Values are numpy arrays
@@ -55,7 +55,7 @@ def push(token, plot, name, code_snippet, comment=None, data_set=None, path_to_c
     }
 
     data = {
-        "name": name,
+        "name": title,
         "code_snippet": code_snippet,
         "comment": comment,
         "data_set": data_set
