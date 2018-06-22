@@ -19,7 +19,7 @@ def push(token, plot, title, code_snippet, comment=None, data_set=None, path_to_
 
     Args:
         token (str): Token for user authentication.
-        plot (fig): Matplotlib figure object
+        plot (fig): Matplotlib figure object. If None, it means 'no chart', just push code snippet
         title (str): Title to display along with the chart
         code_snippet (str): Code snippet used to generate plot
         comment (str): A brief description or comment to post with chart
@@ -30,9 +30,6 @@ def push(token, plot, title, code_snippet, comment=None, data_set=None, path_to_
     # validation
     if not token:
         raise Exception('You must provide a token for authentication.')
-
-    if not plot:
-        raise Exception('You must provide a Matplotlib figure object.')
 
     if not title:
         raise Exception('You must provide a title for your chart.')
@@ -46,35 +43,38 @@ def push(token, plot, title, code_snippet, comment=None, data_set=None, path_to_
         except Exception:
             raise ValueError('The data_set that you passed is not valid.\nIt should be valid JSON string.')
 
-    # save to in-memory file
-    buf = io.StringIO()
-    try:
-        plot.savefig(buf, format='svg')
+    files = None
+    if plot is not None:
+        # save to in-memory file
+        buf = io.StringIO()
 
-        if path_to_csv and os.path.exists(path_to_csv):
-            files = {'chart': buf.getvalue(), 'csv_file': open(path_to_csv, 'r')}
-        else:
-            files = {'chart': buf.getvalue()}
-    except AttributeError:
-        raise ValueError(
-            """
-            The plot you passed is not valid. It should be valid Matplotlib figure object, which can generate a chart.
+        try:
+            plot.savefig(buf, format='svg')
 
-            For example:
-                import matplotlib.pyplot as plt
-                plt.figure()
-                plt.plot([1, 2])
-                plt.title("test")                
+            if path_to_csv and os.path.exists(path_to_csv):
+                files = {'chart': buf.getvalue(), 'csv_file': open(path_to_csv, 'r')}
+            else:
+                files = {'chart': buf.getvalue()}
+        except AttributeError:
+            raise ValueError(
+                """
+                The plot you passed is not valid. It should be valid Matplotlib figure object, which can generate a chart.
+    
+                For example:
+                    import matplotlib.pyplot as plt
+                    plt.figure()
+                    plt.plot([1, 2])
+                    plt.title("test")                
+    
+    
+                As you can see the example above, you can pass the 'plt' object to our param:'plot'.
+                """
+            )
+        except Exception as e:
+            raise Exception(e)
 
-
-            As you can see the example above, you can pass the 'plt' object to our param:'plot'.
-            """
-        )
-    except Exception as e:
-        raise Exception(e)
-
-    finally:
-        buf.close()
+        finally:
+            buf.close()
 
     headers = {
         'Authorization': "Token %s" % token,
@@ -88,7 +88,10 @@ def push(token, plot, title, code_snippet, comment=None, data_set=None, path_to_
         "data_set": data_set
     }
 
-    r = requests.post(POST_URL, files=files, data=data, headers=headers)
+    if files is None:
+        r = requests.post(POST_URL, data=data, headers=headers)
+    else:
+        r = requests.post(POST_URL, files=files, data=data, headers=headers)
 
     if r.status_code == 500:
         raise FractionChartError({'status_code': 500, 'errors': 'API server error'})
