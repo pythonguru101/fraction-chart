@@ -13,7 +13,7 @@ class FractionChartError(Exception):
     pass
 
 
-def push(token, plot, title, code_snippet, comment=None, data_set=None, path_to_csv=None):
+def push(token, plot, title, code_snippet, description=None, data_set=None, path_to_csv=None):
     """
     Pushes a plot to the website via a POST request
 
@@ -22,7 +22,7 @@ def push(token, plot, title, code_snippet, comment=None, data_set=None, path_to_
         plot (fig): Matplotlib figure object. If None, it means 'no chart', just push code snippet
         title (str): Title to display along with the chart
         code_snippet (str): Code snippet used to generate plot
-        comment (str): A brief description or comment to post with chart
+        description (str): A brief description or comment to post with chart
         data_set (JSON str): Keys are column names and Values are numpy arrays
         path_to_csv (str): Path to a CSV data file
     :rtype: The JSON output from the API or an error message
@@ -84,7 +84,7 @@ def push(token, plot, title, code_snippet, comment=None, data_set=None, path_to_
     data = {
         "name": title,
         "code_snippet": code_snippet,
-        "comment": comment,
+        "comment": description,
         "data_set": data_set
     }
 
