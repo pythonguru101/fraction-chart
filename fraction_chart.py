@@ -13,7 +13,7 @@ class FractionChartError(Exception):
     pass
 
 
-def push(token, plot, title, code_snippet, description=None, data_set=None, path_to_csv=None):
+def push(token, title, code_snippet, description=None, plot=None, data_set=None, path_to_csv=None):
     """
     Pushes a plot to the website via a POST request
 
